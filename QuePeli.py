@@ -1,18 +1,23 @@
-import requests, sys
+import requests, sys, re
 from random import *
 from bs4 import BeautifulSoup
+
+
+
 
 p = 1
 name = []
 year = []
 scrap = True
 
+listID = str(re.search("ls\d*",sys.argv[1]).group(0))
+
 
 while scrap == True: #if there's movies
 	
 
-
-	url = 'https://www.imdb.com/list/ls' + sys.argv[1] +'?page='+str(p)
+	
+	url = 'https://www.imdb.com/list/' + listID +'?page='+str(p)
 	response = requests.get(url)
 	soup = BeautifulSoup(response.content, 'html.parser')
 	movie_name = soup.findAll('div',attrs={'class':'lister-item-content'}) 

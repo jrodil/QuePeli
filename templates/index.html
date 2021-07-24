@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuePeli</title>
+</head>
+<body>
+    
+<h1>¿QuePeli?</h1>
+
+<form method="POST">
+    <label for="url">URL: </label>
+    <input name="url" type="text">
+    <input type="submit">
+</form>
+
+<form method="POST" action="nolist">
+    <label for="nolist">nolist</label>
+    <input type="submit" name="nolist" >
+</form>
+
+{% for peli in pelis %}
+    <h3>{{ peli }}</h3>
+{%endfor%}
+
+
+{{error}}
+
+</body>
+</html>
