@@ -39,8 +39,17 @@ while scrap == True: #if there's movies
 
 
 
+movies = []
+for x in range (0,3):
+	i = randint(0,len(name)) #gets random movie
+	movies.append(i)
 
-i = randint(0,len(name)) #gets random movie
-print(name[i] + " - " + year[i])
+
+for i in range (0,len(movies)):
+	print(name[movies[i]] + " - " + year[movies[i]])
+
+
+
+
 
 
