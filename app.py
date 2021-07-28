@@ -1,3 +1,4 @@
+import QuePeli as qp
 from flask import Flask, render_template, request, redirect
 from subprocess import run
 
@@ -18,8 +19,8 @@ def index():
         url = request.form['url']
         if url == "":
             error = "La url está vacía!"
-        cmd = run(['python', 'QuePeli.py',f'{url}'], capture_output=True)
-        pelis = (cmd.stdout.decode('utf-8','replace')).split("\n")
+        
+        pelis = qp.getMovie(url)
         return render_template('index.html',pelis=pelis,error=error)
 
 
@@ -33,9 +34,8 @@ def nolist():
         return render_template('index.html')
 
     if request.method == 'POST':
-        url = "https://www.imdb.com/list/ls006266261/"
-        cmd = run(['python', 'QuePeli.py',url], capture_output=True)
-        pelis = (cmd.stdout.decode('utf-8','replace')).split("\n")
+        url = "https://www.imdb.com/list/ls055592025/"
+        pelis = qp.getMovie(url)
         return render_template('index.html',pelis=pelis,error=error)
 
 
