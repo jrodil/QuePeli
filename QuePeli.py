@@ -16,13 +16,17 @@ listID = str(re.search("ls\d*",sys.argv[1]).group(0))
 while scrap == True: #if there's movies
 	
 
-	
 	url = 'https://www.imdb.com/list/' + listID +'?page='+str(p)
 	response = requests.get(url)
 	soup = BeautifulSoup(response.content, 'html.parser')
 	movie_name = soup.findAll('div',attrs={'class':'lister-item-content'}) 
 	movie_year = soup.findAll('span',attrs={'class':'lister-item-year text-muted unbold'})
+	nMovies = soup.findAll('span',attrs={'class':'pagination-range'})
+	nMovies = str(re.search("of.*",str(nMovies)).group(0))
+	nMovies = nMovies[3:]
+
 	x = 0
+
 
 
 	for i in range(0,len(movie_name)): #gets every movie data
@@ -33,12 +37,10 @@ while scrap == True: #if there's movies
 			year.append(y)
 			x += 1
 
-
-	if x < 100: #if last page
+	if x < 100 or (x == 100 and len(name) == nMovies): #if last page
 		scrap = False
 	else:
 		p += 1
-
 
 
 
@@ -52,6 +54,7 @@ for x in range (0,3):
 
 for i in range (0,len(movies)):
 	print(name[movies[i]] + " - " + year[movies[i]])
+
 
 
 
