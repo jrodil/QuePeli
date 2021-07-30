@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>QuePeli</title>
 </head>
 <body>
@@ -22,7 +23,11 @@
 </form>
 
 {% for peli in pelis %}
-    <h3>{{ peli }}</h3>
+    <div class="movie">
+        <img src="{{peli[2]}}" alt="{{peli[0]}} - poster">
+        <h3>{{ peli[0] }} - {{peli[1]}}</h3>
+        
+    </div>
 {%endfor%}
 
 

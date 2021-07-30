@@ -1,0 +1,10 @@
+.movie h3{
+    display: inline;
+}
+
+.movie img{
+    height: 8%;
+    width: 8%;
+    border: 2px solid black;
+    
+}

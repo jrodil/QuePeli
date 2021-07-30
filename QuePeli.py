@@ -7,8 +7,14 @@ def getMovie(listURL):
 
 
 	p = 1
+
+	movies = {
+		
+	}
+
 	name = []
 	year = []
+
 	scrap = True
 
 	listID = str(re.search("ls\d*",listURL).group(0))
@@ -22,6 +28,7 @@ def getMovie(listURL):
 		soup = BeautifulSoup(response.content, 'html.parser')
 		movie_name = soup.findAll('div',attrs={'class':'lister-item-content'}) 
 		movie_year = soup.findAll('span',attrs={'class':'lister-item-year text-muted unbold'})
+		movie_poster = soup.findAll('div',attrs={'class':'lister-item-image ribbonize'})
 		nMovies = soup.findAll('span',attrs={'class':'pagination-range'})
 
 		try: #if < 100 movies doesn't find regex
@@ -38,8 +45,8 @@ def getMovie(listURL):
 			if(len(movie_name) != 0): #if not empty page
 				n = movie_name[i].h3.a.text
 				y = movie_year[i].text
-				name.append(n)
-				year.append(y)
+				m = movie_poster[i].a.img['loadlate']
+				movies[i] = [n,y,m]
 				x += 1
 
 		if x < 100 or (x == 100 and len(name) == nMovies): #if last page
@@ -51,17 +58,13 @@ def getMovie(listURL):
 
 
 
-	movies = []
+	ranmovies = []
 	for x in range (0,3):
-		i = randint(0,len(name)) #gets random movie
-		movies.append(i)
+		i = randint(0,len(movies)) #gets random movie
+		ranmovies.append(movies[i])
 
 
-	output = []
-	for i in range (0,len(movies)):
-		output.append(name[movies[i]] + " - " + year[movies[i]])
-
-	return output
+	return ranmovies
 
 
 
