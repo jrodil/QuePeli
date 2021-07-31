@@ -20,7 +20,7 @@ def index():
         if url == "":
             error = "La url está vacía!"
         
-        pelis = qp.getMovie(url)
+        pelis = qp.getMovies(url)
         return render_template('index.html',pelis=pelis,error=error)
 
 
@@ -29,13 +29,36 @@ def nolist():
     
     pelis = []
     error = ""
+    url = ""
 
     if request.method == 'GET':
         return render_template('index.html')
 
     if request.method == 'POST':
-        url = "https://www.imdb.com/list/ls055592025/"
-        pelis = qp.getMovie(url)
+        genre = request.form['genre']
+
+
+        if genre == "1":
+            url = "https://www.imdb.com/list/ls055592025/"
+        elif genre == "2":
+            url = "https://www.imdb.com/list/ls009668579/"
+        elif genre == "3":
+            url = "https://www.imdb.com/list/ls051840406/"
+        elif genre == "4":
+            url = "https://www.imdb.com/list/ls009668747/"
+        elif genre == "5":
+            url = "https://www.imdb.com/list/ls009668711/"
+        elif genre == "6":
+            url = "https://www.imdb.com/list/ls009669258/"
+        elif genre == "7":
+            url = "https://www.imdb.com/list/ls049309814/"
+        elif genre == "8":
+            url = "https://www.imdb.com/list/ls000485502/"
+        elif genre == "9":
+            url = "https://www.imdb.com/list/ls009668082/"
+        elif genre == "10":
+            url = "https://www.imdb.com/list/ls009668314/"
+        pelis = qp.getMovies(url)
         return render_template('index.html',pelis=pelis,error=error)
 
 
