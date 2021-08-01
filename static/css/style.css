@@ -14,8 +14,34 @@ h1 a{
 }
 
 .movie img{
-    height: 100%;
-    width: 100%;
+    height: 80%;
+    width: 80%;
     border: 2px solid black;
-    
+    margin: 5%;
+}
+
+#plot{
+    margin: 3%;
+}
+
+
+
+
+
+/* Bootstrap tiling */
+
+/* .container-fluid{
+  ???
+} */
+
+#header{
+    height: 10%;
+}
+
+#navbar{
+    height: 30%;
+}
+
+#movies{
+    height: 60%;
 }

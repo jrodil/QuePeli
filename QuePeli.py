@@ -1,4 +1,4 @@
-import requests, sys, re, imdb
+import requests, sys, re, imdb, os
 from random import *
 from bs4 import BeautifulSoup
 
@@ -46,15 +46,14 @@ def getMovies(listURL):
 
 	ranmovies = []
 	for x in range (0,3): #get random movies
-		i = randint(0,len(movies_id)) 
+		i = randint(0,(len(movies_id)-1)) 
 		info = getMovieInfo(movies_id[i])
 		movie = []
 		movie.append(info['title'])
 		movie.append(info['year'])
-		movie.append(info['cover url'])
-		movie.append(info['plot'])
+		movie.append(depixelCover(info['cover url']))
+		movie.append(str(re.search("[^:]*",info['plot'][0])[0]))
 		movie.append(info['genres'])
-
 		ranmovies.append(movie)
 
 
@@ -69,6 +68,14 @@ def getMovieInfo(id):
 
 	ia = imdb.IMDb()
 	return ia.get_movie(id)
+
+
+def depixelCover(url): #to get hq cover
+    base, ext = os.path.splitext(url)
+    i = url.count('@')
+    s2 = url.split('@')[0]
+    url = s2 + '@' * i + ext
+    return url
 
 
 
