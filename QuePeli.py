@@ -53,10 +53,10 @@ def getMovies(listURL):
 			i = randint(0,(len(movies_id)-1)) 
 			if i not in ranids:
 				ranids.append(i)
-				print(i)
 				repeated = False
 
-		info = getMovieInfo(movies_id[i])
+		info, url = getMovieInfo(movies_id[i])
+
 		movie = []
 		movie.append(info['title'])
 		movie.append(info['year'])
@@ -73,6 +73,8 @@ def getMovies(listURL):
 			stars.append(cast[r]['name'])
 		movie.append(stars)
 
+		movie.append(url)
+
 
 		ranmovies.append(movie)
 
@@ -87,7 +89,9 @@ def getMovies(listURL):
 def getMovieInfo(id):
 
 	ia = imdb.IMDb()
-	return ia.get_movie(id)
+	movie = ia.get_movie(id)
+	url = ia.get_imdbURL(movie)
+	return movie, url
 
 
 def depixelCover(url): #to get hq cover
