@@ -45,8 +45,17 @@ def getMovies(listURL):
 
 
 	ranmovies = []
+	repeated = True
+	ranids = []
 	for x in range (0,3): #get random movies
-		i = randint(0,(len(movies_id)-1)) 
+		repeated = True
+		while repeated == True:
+			i = randint(0,(len(movies_id)-1)) 
+			if i not in ranids:
+				ranids.append(i)
+				print(i)
+				repeated = False
+
 		info = getMovieInfo(movies_id[i])
 		movie = []
 		movie.append(info['title'])
@@ -54,6 +63,17 @@ def getMovies(listURL):
 		movie.append(depixelCover(info['cover url']))
 		movie.append(str(re.search("[^:]*",info['plot'][0])[0]))
 		movie.append(info['genres'])
+
+		director = info['director']
+		movie.append(director[0]['name'])
+
+		stars = []
+		cast = info['cast']
+		for r in range(0,3): #gets top 3 stars
+			stars.append(cast[r]['name'])
+		movie.append(stars)
+
+
 		ranmovies.append(movie)
 
 

@@ -4,8 +4,7 @@ from subprocess import run
 
 
 app = Flask(__name__)
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 
 @app.route("/",methods = ['POST','GET'])
 def index():
@@ -57,4 +56,9 @@ def index():
 
 
 if __name__ == "__main__":
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config['ENV'] = 'development'
+    app.config['DEBUG'] = True
+    app.config['TESTING'] = True
     app.run(debug=True)
