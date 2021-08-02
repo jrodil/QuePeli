@@ -10,7 +10,7 @@ app = Flask(__name__)
 def index():
     
     error = ""
-    pelis = ""
+    pelis = []
 
 
     if request.method == 'GET':
@@ -22,8 +22,10 @@ def index():
             url = request.form['url']
             if url == "":
                 error = "La url está vacía!"
+            else: 
+                pelis = qp.getMovies(url)
                 
-            pelis = qp.getMovies(url)
+            
 
             return render_template('index.html',pelis=pelis,error=error)
 
