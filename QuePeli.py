@@ -9,7 +9,9 @@ def getMovies(listURL):
 	p = 1
 	movies_id = []
 	scrap = True
+
 	listID = str(re.search("ls\d*",listURL).group(0))
+
 
 	while scrap == True: #if there's movies
 		
