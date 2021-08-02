@@ -49,6 +49,8 @@ def index():
                 url = "https://www.imdb.com/list/ls009668082/"
             elif genre == "10":
                 url = "https://www.imdb.com/list/ls009668314/"
+            elif genre == "11":
+                url = "https://www.imdb.com/list/ls000071646/"
             pelis = qp.getMovies(url)
 
             return render_template('index.html',pelis=pelis,error=error)

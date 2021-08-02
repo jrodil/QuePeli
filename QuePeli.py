@@ -9,12 +9,35 @@ def getMovies(listURL):
 	p = 1
 	movies_id = []
 	scrap = True
+	listType = None
 
-	listID = str(re.search("ls\d*",listURL).group(0))
+
+
+	try:
+		listID = str(re.search("ls\d*",listURL).group(0))
+		listType = "list"
+	except:
+		try: 
+			listID = str(re.search("/user/ur\d*/watchlist",listURL).group(0))
+			listType = "watchlist"
+		except:
+			None
+		
+
 
 
 	while scrap == True: #if there's movies
 		
+
+		if listType == "watchlist":
+			response = requests.get(listURL)
+			soup = BeautifulSoup(response.content, 'html.parser')
+			url = soup.findAll('meta',attrs={'property':'pageId'})[0]['content']
+			listID = str(re.search("ls\d*",url).group(0))
+
+
+
+
 
 		list_url = 'https://www.imdb.com/list/' + listID +'?page='+str(p)
 		response = requests.get(list_url)
