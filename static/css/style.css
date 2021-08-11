@@ -1,22 +1,42 @@
-h1 a{
-    margin: 0 auto;
-    color: black;
-    text-decoration: none;
-    
+html,body{
+    height: 100%;
+    overflow-x: hidden;
+    background-color: #1A1A2E;
+}
+
+
+
+
+#logo img{
+    max-width: 12%;
+    height: auto;
+}
+
+label{
+    font-weight: bold;
+}
+
+
+
+.movie:hover{
+    transform: scale(1.05);
 }
 
 .movie{
     border-style: solid;
     text-decoration: none;
+    height: 100%;
+    background-color: #16213E;
+    color: orange;
 
 }
 
-.movie a{
+.movie-link{
     text-decoration: none;
     color: black;
 }
 
-.movie a:hover{
+.movie-link:hover{
     text-decoration: none;
     color:  black;
 }
@@ -26,34 +46,44 @@ h1 a{
 }
 
 .movie img{
-    height: 80%;
-    width: 80%;
-    border: 2px solid black;
-    margin: 5%;
+    height: 100%; 
+    width: 100%;
+    border: 2px solid orange;
 }
 
-#plot{
-    margin: 3%;
+.search-bar{
+    height: 100%;
 }
 
+
+
+
+#list{
+    text-align: center;
+    color: orange;
+}
+
+#nolist{
+    text-align: center;
+    color: orange;
+}
 
 
 
 
 /* Bootstrap tiling */
 
-/* .container-fluid{
-  ???
-} */
+
 
 #header{
-    height: 10%;
+    background-color: #0F3460;
 }
 
 #navbar{
-    height: 30%;
+    background-color: #0F3460;
+    
 }
 
 #movies{
-    height: 60%;
+    
 }

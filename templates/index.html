@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>QuePeli</title>
 </head>
@@ -17,37 +17,43 @@
 
 
         <div class="row" id="header">
-            <h1><a href="/">¿QuePeli?</a></h1>
+            <div class="col-sm-12 text-center p-2">
+                    <a href="/" id="logo">
+                        <img src="static/images/logo.png" alt="logo">
+                    </a>
+            </div>
         </div>
 
 
         <div class="row" id="navbar">
-            <form method="POST" name="list">
-                <label for="url">URL: </label>
-                <input name="url" type="text">
-                <input type="submit" name="list">
-            </form>
+            <div class="col-sm-12 col-md-6 p-3">
+                <form method="POST" name="list" id="list">
+                    <label for="url">Paste URL: </label>
+                    <input name="url" type="text" class="search-bar">
+                    <input type="submit" name="list" class="search-bar" value="Search">
+                </form>
+            </div>
 
-            <form method="POST" name="nolist">
-                <select name="genre" id="genre">
-                    <option value="1" selected>Any genre</option>
-                    <option value="2">Action</option>
-                    <option value="3">Animation</option>
-                    <option value="4">Comedy</option>
-                    <option value="5">Drama</option>
-                    <option value="6">Fantasy</option>
-                    <option value="7">Horror</option>
-                    <option value="11">Musical</option>
-                    <option value="8">Romance</option>
-                    <option value="9">Sci-Fi</option>
-                    <option value="10">Thriller</option>
-
-                </select>
-                <label for="nolist">nolist</label>
-                <input type="submit" name="nolist">
-            </form>
+            <div class="col-sm-12 col-md-6 p-3">
+                <form method="POST" name="nolist" id="nolist">
+                    <label for="genre">Randomize by genre: </label>
+                    <select name="genre" id="genre" class="search-bar">
+                        <option value="1" selected>Any</option>
+                        <option value="2">Action</option>
+                        <option value="3">Animation</option>
+                        <option value="4">Comedy</option>
+                        <option value="5">Drama</option>
+                        <option value="6">Fantasy</option>
+                        <option value="7">Horror</option>
+                        <option value="11">Musical</option>
+                        <option value="8">Romance</option>
+                        <option value="9">Sci-Fi</option>
+                        <option value="10">Thriller</option>
+                    </select>
+                    <input type="submit" name="nolist" class="search-bar" value="Search">
+                </form>
+            </div>
             {{error}}
-
         </div>
 
 
@@ -55,20 +61,19 @@
 
         <div class="row" id="movies">
             {% for peli in pelis %}
-            <div class="col-md-4">
-                <div class="movie">
-                    <a href="{{peli[7]}}" target="_blank">
+            <div class="col-sm-12 col-md-4 p-3">
+                <a href="{{peli[7]}}" target="_blank" class="movie-link">
+                    <div class="movie">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-sm-12 p-2">
                                 <h5>{{ peli[0] }}</h5>
-
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-sm-12 col-md-5 p-4">
                                 <img src="{{peli[2]}}" alt="{{peli[0]}} - poster">
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-sm-12 col-md-7 p-4">
                                 <h6>Year: {{peli[1]}}</h6>
                                 <h6>Genres: {% for genre in peli[4] %}{{genre}} {% endfor %}</h6>
                                 <h6>Director: {{peli[5]}}</h6>
@@ -76,12 +81,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
-                                <p id="plot">{{peli[3]}}</p>
+                            <div class="col-sm-12 p-4">
+                                <p>{{peli[3]}}</p>
                             </div>
                         </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
+
             </div>
             {%endfor%}
         </div>
@@ -99,14 +105,14 @@
     <!-- Boostrap -->
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 
 
 
