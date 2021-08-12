@@ -16,13 +16,30 @@ label{
     font-weight: bold;
 }
 
+#home{
+    border-radius: 7px;
+    border-style: solid;
+    text-decoration: none;
+    height: 100%;
+    background-color: #16213E;
+    color: orange;
+    margin: 3%;
+}
 
+
+#home div p, #home div h2{
+    display: block;
+    text-align: center;
+    padding: 1%;
+
+}
 
 .movie:hover{
     transform: scale(1.05);
 }
 
 .movie{
+    border-radius: 7px;
     border-style: solid;
     text-decoration: none;
     height: 100%;
@@ -55,6 +72,18 @@ label{
     height: 100%;
 }
 
+.submit-button{
+    background-color: orange;
+    color: #16213E;
+    font-weight: bold;
+    border: 0;
+}
+
+.submit-button:hover{
+    background-color: rgb(255, 102, 0);
+    color: #000000;
+}
+
 
 
 
@@ -84,6 +113,3 @@ label{
     
 }
 
-#movies{
-    
-}

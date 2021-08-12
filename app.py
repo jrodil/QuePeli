@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 @app.route("/",methods = ['POST','GET'])
-def index():
+def movies():
     
     error = ""
     pelis = []
@@ -27,7 +27,7 @@ def index():
                 
             
 
-            return render_template('index.html',pelis=pelis,error=error)
+            return render_template('movies.html',pelis=pelis,error=error)
 
         if "nolist" in request.form:
             genre = request.form['genre']
@@ -55,7 +55,7 @@ def index():
                 url = "https://www.imdb.com/list/ls000071646/"
             pelis = qp.getMovies(url)
 
-            return render_template('index.html',pelis=pelis,error=error)
+            return render_template('movies.html',pelis=pelis,error=error)
 
 
 
