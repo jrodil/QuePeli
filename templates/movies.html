@@ -74,9 +74,9 @@
                             </div>
                             <div class="col-sm-12 col-md-7 p-4">
                                 <h6>Year: {{peli[1]}}</h6>
-                                <h6>Genres: {% for genre in peli[4] %}{{genre}} {% endfor %}</h6>
+                                <h6>Genres: {% for i in range(peli[4]|length) %}{% if i != peli[4]|length - 1 %}{{peli[4][i]+", "}}{%else%}{{peli[4][i]}}{%endif%}{% endfor %}</h6>
                                 <h6>Director: {{peli[5]}}</h6>
-                                <h6>Cast: {% for star in peli[6] %}{{star}} {%endfor%}</h6>
+                                <h6>Cast: {% for i in range(peli[6]|length) %}{% if i != peli[6]|length - 1 %}{{peli[6][i]+", "}}{%else%}{{peli[6][i]}}{%endif%}{% endfor %}</h6>
                             </div>
                         </div>
                         <div class="row">
