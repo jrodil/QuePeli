@@ -1,19 +1,24 @@
-import requests, sys, re, imdb, os
+import requests, sys, re, imdb, os, time
 from random import *
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor, wait
+
+
+
+
+responses = []
 
 
 def getMovies(listURL):
 
 
-	p = 1
 	movies_id = []
 	scrap = True
 	listType = None
 
 
 
-	try:
+	try: #gets list type
 		listID = str(re.search("ls\d*",listURL).group(0))
 		listType = "list"
 	except:
@@ -25,48 +30,42 @@ def getMovies(listURL):
 		
 
 
-
-	while scrap == True: #if there's movies
-		
-
-		if listType == "watchlist":
-			response = requests.get(listURL)
-			soup = BeautifulSoup(response.content, 'html.parser')
-			url = soup.findAll('meta',attrs={'property':'pageId'})[0]['content']
-			listID = str(re.search("ls\d*",url).group(0))
-
-
-
-
-
-		list_url = 'https://www.imdb.com/list/' + listID +'?page='+str(p)
-		response = requests.get(list_url)
+	if listType == "watchlist": #gets list-type id from an html tag
+		response = requests.get(listURL)
 		soup = BeautifulSoup(response.content, 'html.parser')
-		list_movies = soup.findAll('div',attrs='lister-item mode-detail')
-		nMovies = soup.findAll('span',attrs={'class':'pagination-range'})
+		url = soup.findAll('meta',attrs={'property':'pageId'})[0]['content']
+		listID = str(re.search("ls\d*",url).group(0))
 
-		try: #if < 100 movies won't find regex
-			nMovies = str(re.search("of.*",str(nMovies)).group(0))
-			nMovies = nMovies[3:]
-		except:
-			None
 
-		x = 0
-		
-		for i in range(0,len(list_movies)): #gets every movie data
-			if(len(list_movies) != 0): #if not empty page
-				id = ""
-				id = str(re.search("[^tt]\d*",str(list_movies[i].div['data-tconst'])).group(0))
-				movies_id.append(id)
-				x += 1
-
-		if x < 100 or (x == 100 and len(movies_id) == nMovies): #if last page
-			scrap = False
-		else:
-			p += 1
+	list_url = 'https://www.imdb.com/list/' + listID
+	list_pages = getPages(list_url) #gets every page of the list
 
 
 
+	with ThreadPoolExecutor(max_workers=len(list_pages)) as pool:
+		for i in range(len(list_pages)):
+			future = pool.submit(makeRequest,list_pages[i])
+		future.result()
+		pool.shutdown(wait=True)	
+
+
+
+
+
+
+
+	list_movies = [] #get movies
+	for i in range(len(list_pages)):
+		soup = BeautifulSoup(responses[i],'html.parser')
+		list_movies = list_movies + soup.findAll('div',attrs='lister-item mode-detail')
+
+
+	
+
+	for i in range(0,len(list_movies)): #gets every movie ID
+		id = ""
+		id = str(re.search("[^tt]\d*",str(list_movies[i].div['data-tconst'])).group(0))
+		movies_id.append(id)
 
 
 	ranmovies = []
@@ -80,25 +79,44 @@ def getMovies(listURL):
 				ranids.append(i)
 				repeated = False
 
-		info, url = getMovieInfo(movies_id[i])
 
+
+
+	global ranMovieUrl,ranMovieInfo
+	ranMovieInfo = []
+	ranMovieUrl = []
+	with ThreadPoolExecutor(max_workers=len(movies_id)) as pool: #multithread IMDbPy requests
+		for i in range(len(ranids)):
+			future = pool.submit(getMovieInfo,movies_id[ranids[i]])
+		future.result()
+		pool.shutdown(wait=True)
+
+	
+
+	for i in range(3):
+		
 		movie = []
-		movie.append(info['title'])
-		movie.append(info['year'])
-		movie.append(depixelCover(info['cover url']))
-		movie.append(str(re.search("[^:]*",info['plot'][0])[0]))
-		movie.append(info['genres'])
+		movie.append(ranMovieInfo[i]['title'])
+		movie.append(ranMovieInfo[i]['year'])
+		movie.append(depixelCover(ranMovieInfo[i]['cover url']))
 
-		director = info['director']
+		try:
+			movie.append(str(re.search("[^:]*",ranMovieInfo[i]['plot'][0])[0]))
+		except:
+			movie.append(" ")
+
+		movie.append(ranMovieInfo[i]['genres'])
+
+		director = ranMovieInfo[i]['director']
 		movie.append(director[0]['name'])
 
 		stars = []
-		cast = info['cast']
+		cast = ranMovieInfo[i]['cast']
 		for r in range(0,3): #gets top 3 stars
 			stars.append(cast[r]['name'])
 		movie.append(stars)
 
-		movie.append(url)
+		movie.append(ranMovieUrl[i])
 
 
 		ranmovies.append(movie)
@@ -111,12 +129,53 @@ def getMovies(listURL):
 
 
 
-def getMovieInfo(id):
 
+def getPages(listURL):
+
+
+	urls = []
+	response = requests.get(listURL)
+	soup = BeautifulSoup(response.content, 'html.parser')
+
+	try:
+		soup = soup.findAll('span',attrs={'class':'pagination-range'})
+		nMovies = str(re.search("of \d+",str(soup[0])).group(0))
+		nMovies = nMovies.split(" ")
+		nMovies = nMovies[1]
+		nPages = int(nMovies) / 100 
+
+		if nPages % 1 != 0:
+			nPages = int(nPages) + 1
+		else:
+			nPages = int(nPages)
+
+		for i in range(nPages):
+			urls.append(listURL+"?page="+str(i + 1))
+
+	except: 
+		urls.append(listURL)
+
+	return urls
+
+
+
+
+
+def makeRequest(listURL):
+	result = requests.get(listURL)
+	responses.append(result.content)
+	return None
+
+
+def getMovieInfo(id):
 	ia = imdb.IMDb()
 	movie = ia.get_movie(id)
-	url = ia.get_imdbURL(movie)
-	return movie, url
+	URL = ia.get_imdbURL(movie)
+	ranMovieInfo.append(movie)
+	ranMovieUrl.append(URL)
+	return None
+
+
 
 
 def depixelCover(url): #to get hq cover
