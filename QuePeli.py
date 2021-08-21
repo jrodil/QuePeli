@@ -9,63 +9,69 @@ from concurrent.futures import ThreadPoolExecutor, wait
 responses = []
 
 
-def getMovies(listURL):
+def getMovies(listURL,src):
 
 
 	movies_id = []
-	scrap = True
 	listType = None
 
 
+	if src[0] == 'imdb':
 
-	try: #gets list type
-		listID = str(re.search("ls\d*",listURL).group(0))
-		listType = "list"
-	except:
-		try: 
-			listID = str(re.search("/user/ur\d*/watchlist",listURL).group(0))
-			listType = "watchlist"
+
+		try: #gets list type
+			listID = str(re.search("ls\d*",listURL).group(0))
+			listType = "list"
 		except:
-			None
+			try: 
+				listID = str(re.search("/user/ur\d*/watchlist",listURL).group(0))
+				listType = "watchlist"
+			except:
+				None
+			
+
+
+		if listType == "watchlist": #gets list-type id from an html tag
+			response = requests.get(listURL)
+			soup = BeautifulSoup(response.content, 'html.parser')
+			url = soup.findAll('meta',attrs={'property':'pageId'})[0]['content']
+			listID = str(re.search("ls\d*",url).group(0))
+
+
+		list_url = 'https://www.imdb.com/list/' + listID
+		list_pages = getPages(list_url) #gets every page of the list
+
+
+
+		with ThreadPoolExecutor(max_workers=len(list_pages)) as pool:
+			for i in range(len(list_pages)):
+				future = pool.submit(makeRequest,list_pages[i])
+			future.result()
+			pool.shutdown(wait=True)	
+
+
+
+
+
+
+
+		list_movies = [] #get movies
+		for i in range(len(list_pages)):
+			soup = BeautifulSoup(responses[i],'html.parser')
+			list_movies = list_movies + soup.findAll('div',attrs='lister-item mode-detail')
+
+
 		
 
+		for i in range(0,len(list_movies)): #gets every movie ID
+			id = ""
+			id = str(re.search("[^tt]\d*",str(list_movies[i].div['data-tconst'])).group(0))
+			movies_id.append(id)
 
-	if listType == "watchlist": #gets list-type id from an html tag
-		response = requests.get(listURL)
-		soup = BeautifulSoup(response.content, 'html.parser')
-		url = soup.findAll('meta',attrs={'property':'pageId'})[0]['content']
-		listID = str(re.search("ls\d*",url).group(0))
-
-
-	list_url = 'https://www.imdb.com/list/' + listID
-	list_pages = getPages(list_url) #gets every page of the list
+	elif src[0] == 'json':
+		movies_id = src[1]
 
 
-
-	with ThreadPoolExecutor(max_workers=len(list_pages)) as pool:
-		for i in range(len(list_pages)):
-			future = pool.submit(makeRequest,list_pages[i])
-		future.result()
-		pool.shutdown(wait=True)	
-
-
-
-
-
-
-
-	list_movies = [] #get movies
-	for i in range(len(list_pages)):
-		soup = BeautifulSoup(responses[i],'html.parser')
-		list_movies = list_movies + soup.findAll('div',attrs='lister-item mode-detail')
-
-
-	
-
-	for i in range(0,len(list_movies)): #gets every movie ID
-		id = ""
-		id = str(re.search("[^tt]\d*",str(list_movies[i].div['data-tconst'])).group(0))
-		movies_id.append(id)
 
 
 	ranmovies = []
@@ -78,6 +84,7 @@ def getMovies(listURL):
 			if i not in ranids:
 				ranids.append(i)
 				repeated = False
+
 
 
 
